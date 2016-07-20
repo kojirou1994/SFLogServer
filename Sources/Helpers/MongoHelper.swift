@@ -8,14 +8,15 @@
 
 import Foundation
 import MongoDB
+import SFMongo
 
 extension MongoHelper{
     
-    public func insertLog(logInfo:Log)throws {
+    public func insert(bson: BSONStringConvertible)throws {
         guard let collectiont = dbCollection() else {
             throw MongoError.collectionError
         }
-        _ = collectiont.insert(document: try BSON(json:logInfo.bsonString))
+        _ = collectiont.insert(document: try BSON(json:bson.bsonString))
         defer {
             collectiont.close()
         }

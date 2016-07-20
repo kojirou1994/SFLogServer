@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SFMongo
 
 enum UserState: Int {
     case closed = 0
