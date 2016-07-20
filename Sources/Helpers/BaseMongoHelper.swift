@@ -52,13 +52,22 @@ public class MongoHelper:MongoProtocol{
         db?.close()
         client?.close()
     }
+
+    private static let instanceHelper: MongoHelper = {
+        let instance = MongoHelper()
+        return instance
+    }()
     
-    public class var instance:MongoHelper{
-        struct Static {
-            static let instance = MongoHelper()
-        }
-        return Static.instance
+    class func instance() -> MongoHelper {
+        return instanceHelper
     }
+    
+//    public class var instance:MongoHelper{
+//        struct Static {
+//            static let instance = MongoHelper()
+//        }
+//        return Static.instance
+//    }
 }
 
 
