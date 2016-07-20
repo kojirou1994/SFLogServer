@@ -3,3 +3,6 @@ import SFMongo
 import MongoDB
 
 
+func test() {
+
+}
