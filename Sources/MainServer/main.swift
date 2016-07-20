@@ -13,6 +13,17 @@ routes.add(method: .get, uri: "/") { (request, response) in
     response.completed()
 }
 
+routes.add(method: .post, uri: "/login") { (req, res) in
+    guard let appId = req.param(name: "appId"), appKey = req.param(name: "appKey") else {
+        res.status = .badRequest
+        res.completed()
+        return
+    }
+    print(appId)
+    print(appKey)
+    res.completed()
+}
+
 routes.add(method: .get, uri: "/log/{id}") { (request, response) in
     if let logId = request.urlVariables["id"] {
         print("Log ID: \(logId)")
