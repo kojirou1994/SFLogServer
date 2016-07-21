@@ -44,11 +44,6 @@ public class MongoHelper {
         db.close()
         client.close()
     }
-
-    public static let instanceHelper: MongoHelper = {
-        let instance = MongoHelper()
-        return instance
-    }()
     
 }
 
