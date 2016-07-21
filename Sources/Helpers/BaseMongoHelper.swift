@@ -53,14 +53,14 @@ public class MongoHelper:MongoProtocol{
         client?.close()
     }
 
-    private static let instanceHelper: MongoHelper = {
+    public static let instanceHelper: MongoHelper = {
         let instance = MongoHelper()
         return instance
     }()
     
-    class func instance() -> MongoHelper {
-        return instanceHelper
-    }
+//    class func instance() -> MongoHelper {
+//        return instanceHelper
+//    }
     
 //    public class var instance:MongoHelper{
 //        struct Static {

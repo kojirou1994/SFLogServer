@@ -12,9 +12,12 @@ import SFMongo
 
 enum LogSource: Int {
     case web = 0
-    case iOS = 1
-    case android = 2
-    case other = 3
+    case rowser_extension = 10
+    case wechat = 20
+    case pc = 30
+    case ios = 100
+    case android = 200
+    case windows = 300
 }
 
 enum LogLevel: Int {
@@ -26,47 +29,44 @@ enum LogLevel: Int {
 
 public struct Log: SFModel {
     var _id: ObjectId
-    
-    var appId: String
-    
-    var state: String
-    
+    //关联的app
+    var app: App
+    //来源
     var source: LogSource
-    
-    var userAgent: String
-    
-    var device: String
-    
-    var sourceIP: String
-    
-    var sourceUserId: String
-    
-    var sourceUsername: String
-    
+    //来源ip
+    var source_ip: String
+    //上传设备描述
+    var device_description: String?
+    //设备推送标示
+    var device_token:String?
+    //日志标题
+    var title:String?
+    //日志等级
     var level: LogLevel
-    
-    var content: String
-    
-    var createTime: Date
-    
+    //日志内容
+    var content: Any
+    //创建时间
+    var create_time: Date
+    //是否删除
+    var deleted:Bool
+    //log描述
     //var logDescription:LogDescription
     
     public init(json: JSON) throws {
-        guard let id = json["_id"].oid, appId = json["appId"].string, state = json["state"].string, source = LogSource(rawValue: json["source"].intValue), userAgent = json["userAgent"].string, device = json["device"].string, sourceIP = json["sourceIP"].string, sourceUserId = json["sourceUserId"].string, sourceUsername = json["sourceUsername"].string, level = LogLevel(rawValue: json["level"].intValue), content = json["content"].string, createTime = json["createTime"].date  else {
+        guard let id = json["_id"].oid, app_info = json["app"].string, source = LogSource(rawValue: json["source"].intValue),source_ip = json["source_ip"].string,level = LogLevel(rawValue: json["level"].intValue), content = json["content"].arrayObject, create_time = json["createTime"].date,deleted = json["deleted"].bool  else {
             throw SFMongoError.invalidData
         }
         self._id = id
-        self.appId = appId
-        self.state = state
+        self.app = try App(json:JSON(app_info))
         self.source = source
-        self.userAgent = userAgent
-        self.device = device
-        self.sourceIP = sourceIP
-        self.sourceUserId = sourceUserId
-        self.sourceUsername = sourceUsername
+        self.source_ip = source_ip
+        self.device_description = json["device_description"].string
+        self.device_token = json["device_token"].string
+        self.title = json["title"].string
         self.level = level
         self.content = content
-        self.createTime = createTime
+        self.create_time = create_time
+        self.deleted = deleted
     }
 }
 
