@@ -4,7 +4,7 @@ import PerfectHTTP
 import SFMongo
 import MongoDB
 import Models
-
+import Helpers
 
 let server = HTTPServer()
 
@@ -49,12 +49,20 @@ routes.add(method: .get, uri: "/log/{id}") { (request, response) in
 
 routes.add(method: .post, uri: "/log") { request, response in
     guard let newLog = Log(request: request) else {
+        print("not a log")
         response.status = .badRequest
         response.completed()
         return
     }
-    dump(newLog)
-    response.completed()
+    if validateAppInfo(app: newLog.app) {
+        insert(log: newLog)
+        response.status = .created
+        response.completed()
+    }else {
+        print("app key wrong")
+        response.status = .forbidden
+        response.completed()
+    }
 }
 
 server.addRoutes(routes)

@@ -31,7 +31,7 @@ public struct Log: SFModel {
     /// ID
     var _id: ObjectId
     //关联的app
-    var app: App
+    public var app: App
     //来源
     var source: LogSource
     //来源ip
@@ -69,14 +69,8 @@ public struct Log: SFModel {
     }
     
     public init?(request: HTTPRequest) {
-        var dic = [String: String]()
-        for (key, value) in request.postParams {
-            dic[key] = value
-        }
-        
-        let json = JSON(dic)
-        
-        guard let app = try? App(json: json["app"]), source = LogSource(rawValue: json["source"].intValue), level = LogLevel(rawValue: json["level"].intValue), content = json["content"].string else {
+        let json = JSON.parse(request.postBodyString ?? "")
+        guard let app = try? App(json: json), source = LogSource(rawValue: json["source"].intValue), level = LogLevel(rawValue: json["level"].intValue), content = json["content"].string else {
             return nil
         }
         self._id = ObjectId.generate()

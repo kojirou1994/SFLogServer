@@ -10,9 +10,9 @@ import Foundation
 import SFMongo
 
 public struct App: SFModel {
-    var _id: ObjectId
+    public var _id: ObjectId
     //app key
-    var app_key: String
+    public var app_key: String
     //app 名称
     var name: String
     //app 介绍网址
@@ -28,9 +28,13 @@ public struct App: SFModel {
     //版本
     var version: String
 
-    
     public init(json: JSON) throws {
-        guard let id = json["_id"].oid,key = json["key"].string, version = json["version"].string, name = json["name"].string,disabled = json["disabled"].bool,deleted = json["delected"].bool, create_time = json["create_time"].date else {
+        print(json["create_time"].date)
+        guard let id = json["_id"].oid, key = json["app_key"].string,
+            version = json["version"].string, name = json["name"].string,
+            disabled = json["disabled"].bool, deleted = json["deleted"].bool,
+            create_time = json["create_time"].date else {
+            print("not an app")
             throw SFMongoError.invalidData
         }
         

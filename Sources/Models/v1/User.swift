@@ -8,6 +8,7 @@
 
 import Foundation
 import SFMongo
+import PerfectHTTP
 
 enum UserState: Int {
     case closed = 0
