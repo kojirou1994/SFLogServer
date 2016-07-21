@@ -24,6 +24,16 @@ routes.add(method: .post, uri: "/login") { (req, res) in
     res.completed()
 }
 
+//提交日志
+routes.add(method:.post,uri: "/submit"){ (request,response) in
+    guard let access_token = request.param(name:"access_token") else{
+        response.status = .badRequest
+        response.completed()
+        return
+    }
+    
+}
+
 routes.add(method: .get, uri: "/log/{id}") { (request, response) in
     if let logId = request.urlVariables["id"] {
         print("Log ID: \(logId)")
