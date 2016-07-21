@@ -8,9 +8,9 @@
 
 import Foundation
 import SFMongo
+import PerfectHTTP
 
-
-enum LogSource: Int {
+public enum LogSource: Int {
     case web = 0
     case rowser_extension = 10
     case wechat = 20
@@ -20,7 +20,7 @@ enum LogSource: Int {
     case windows = 300
 }
 
-enum LogLevel: Int {
+public enum LogLevel: Int {
     case info
     case error
     case debug
@@ -28,6 +28,7 @@ enum LogLevel: Int {
 }
 
 public struct Log: SFModel {
+    /// ID
     var _id: ObjectId
     //关联的app
     var app: App
@@ -68,6 +69,32 @@ public struct Log: SFModel {
         self.create_time = create_time
         self.deleted = deleted
     }
+    
+//    public init?(request: HTTPRequest) {
+//        var dic = [String: String]()
+//        for (key, value) in request.postParams {
+//            dic[key] = value
+//        }
+//        
+//        let json = JSON(dic)
+//        
+//        guard let appId = json["appId"].string, state = json["state"].string, source = LogSource(rawValue: json["source"].intValue), userAgent = json["userAgent"].string, device = json["device"].string, sourceIP = json["sourceIP"].string, sourceUserId = json["sourceUserId"].string, sourceUsername = json["sourceUsername"].string, level = LogLevel(rawValue: json["level"].intValue), content = json["content"].string  else {
+//            return nil
+//        }
+//        
+//        self._id = ObjectId.generate()
+//        self.appId = appId
+//        self.state = state
+//        self.source = source
+//        self.userAgent = userAgent
+//        self.device = device
+//        self.sourceIP = sourceIP
+//        self.sourceUserId = sourceUserId
+//        self.sourceUsername = sourceUsername
+//        self.level = level
+//        self.content = content
+//        self.createTime = Date()
+//    }
 }
 
 

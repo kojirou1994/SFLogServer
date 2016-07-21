@@ -3,6 +3,8 @@ import PerfectLib
 import PerfectHTTP
 import SFMongo
 import MongoDB
+import Models
+
 
 let server = HTTPServer()
 
@@ -42,6 +44,16 @@ routes.add(method: .get, uri: "/log/{id}") { (request, response) in
     }
     response.setHeader(HTTPResponseHeader.Name.contentType, value: "application/json")
     response.setBody(string: "{\"data\": 123}")
+    response.completed()
+}
+
+routes.add(method: .post, uri: "/log") { request, response in
+    guard let newLog = Log(request: request) else {
+        response.status = .badRequest
+        response.completed()
+        return
+    }
+    dump(newLog)
     response.completed()
 }
 

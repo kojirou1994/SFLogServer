@@ -9,48 +9,40 @@
 import Foundation
 import MongoDB
 
-public enum MongoError:ErrorProtocol{
-    case clinetError
-    case datebaseError
+public enum MongoError: ErrorProtocol {
+    case clientError
+    case databaseError
     case collectionError    
 }
 
-public class MongoHelper:MongoProtocol{
-    private var clientUri: String = "mongodb://localhost"
-    private var dbName: String = "test"
-    private var collectionName: String = "testcollection"
+private let clientUri = "mongodb://localhost"
+
+private let dbName = "Log"
+
+private let collectionName = "col"
+
+public class MongoHelper {
     
-    let client:MongoClient?
-    var db:MongoDatabase?
+    let client: MongoClient
     
-    private init() {
-         client = try! MongoClient(uri: clientUri)
-         db = client?.getDatabase(name: dbName)
+    var db: MongoDatabase
+    
+    public static let instanceHelper = { return MongoHelper()}()
+    
+    init() {
+        client = try! MongoClient(uri: clientUri)
+        db = client.getDatabase(name: dbName)
     }
     
     //建立链接
     public func dbCollection() -> MongoCollection? {
-        if db == nil {
-            return nil
-        }
-        guard let collection = db?.getCollection(name: collectionName) else {
-            return nil
-        }
-        
-        return collection
+        return db.getCollection(name: collectionName)
     }
     
     //关闭数据库
-    public func closeDb()throws {
-        if db == nil {
-            throw MongoError.datebaseError
-        }
-        if client == nil {
-            throw MongoError.clinetError
-        }
-        
-        db?.close()
-        client?.close()
+    deinit {
+        db.close()
+        client.close()
     }
 
     public static let instanceHelper: MongoHelper = {
@@ -58,16 +50,6 @@ public class MongoHelper:MongoProtocol{
         return instance
     }()
     
-//    class func instance() -> MongoHelper {
-//        return instanceHelper
-//    }
-    
-//    public class var instance:MongoHelper{
-//        struct Static {
-//            static let instance = MongoHelper()
-//        }
-//        return Static.instance
-//    }
 }
 
 
