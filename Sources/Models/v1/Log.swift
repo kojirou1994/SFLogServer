@@ -8,7 +8,7 @@
 
 import Foundation
 import SFMongo
-
+import PerfectHTTP
 
 public enum LogSource: Int {
     case web = 0
@@ -69,7 +69,18 @@ public struct Log: SFModel {
         self.createTime = createTime
     }
     
-    public init(appId: String, state: String, source: LogSource, userAgent: String, device: String, sourceIP: String, sourceUserId: String, sourceUsername: String, level: LogLevel, content: String, createTime: Date) {
+    public init?(request: HTTPRequest) {
+        var dic = [String: String]()
+        for (key, value) in request.postParams {
+            dic[key] = value
+        }
+        
+        let json = JSON(dic)
+        
+        guard let appId = json["appId"].string, state = json["state"].string, source = LogSource(rawValue: json["source"].intValue), userAgent = json["userAgent"].string, device = json["device"].string, sourceIP = json["sourceIP"].string, sourceUserId = json["sourceUserId"].string, sourceUsername = json["sourceUsername"].string, level = LogLevel(rawValue: json["level"].intValue), content = json["content"].string  else {
+            return nil
+        }
+        
         self._id = ObjectId.generate()
         self.appId = appId
         self.state = state
@@ -81,7 +92,7 @@ public struct Log: SFModel {
         self.sourceUsername = sourceUsername
         self.level = level
         self.content = content
-        self.createTime = createTime
+        self.createTime = Date()
     }
 }
 
