@@ -10,7 +10,7 @@ import Foundation
 import SFMongo
 import PerfectHTTP
 
-public enum LogSource: Int {
+public enum LogSource: Int, BSONStringConvertible, JSONStringConvertible {
     case web = 0
     case rowser_extension = 10
     case wechat = 20
@@ -18,13 +18,29 @@ public enum LogSource: Int {
     case ios = 100
     case android = 200
     case windows = 300
+    
+    public var jsonString: String {
+        return self.rawValue.description
+    }
+    
+    public var bsonString: String {
+        return self.rawValue.description
+    }
 }
 
-public enum LogLevel: Int {
-    case info
-    case error
-    case debug
-    case warn
+public enum LogLevel: Int, BSONStringConvertible, JSONStringConvertible {
+    case info = 0
+    case error = 1
+    case debug = 2
+    case warn = 3
+    
+    public var jsonString: String {
+        return self.rawValue.description
+    }
+    
+    public var bsonString: String {
+        return self.rawValue.description
+    }
 }
 
 public struct Log: SFModel {
@@ -52,7 +68,9 @@ public struct Log: SFModel {
     var deleted:Bool
     
     public init(json: JSON) throws {
+        print(json["source_ip"].string)
         guard let id = json["_id"].oid, app = try? App(json: json["app"]), source = LogSource(rawValue: json["source"].intValue), source_ip = json["source_ip"].string, level = LogLevel(rawValue: json["level"].intValue), content = json["content"].string, create_time = json["createTime"].date, deleted = json["deleted"].bool else {
+            print("not a log")
             throw SFMongoError.invalidData
         }
         self._id = id

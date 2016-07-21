@@ -36,6 +36,12 @@ routes.add(method:.post,uri: "/submit"){ (request,response) in
     
 }
 
+routes.add(method: .get, uri: "/log") { (request, response) in
+    response.setHeader(HTTPResponseHeader.Name.contentType, value: "application/json")
+    response.setBody(string: LogDBManager.shared.findLog()?.jsonString ?? "")
+    response.completed()
+}
+
 routes.add(method: .get, uri: "/log/{id}") { (request, response) in
     if let logId = request.urlVariables["id"] {
         print("Log ID: \(logId)")
@@ -54,8 +60,8 @@ routes.add(method: .post, uri: "/log") { request, response in
         response.completed()
         return
     }
-    if validateAppInfo(app: newLog.app) {
-        insert(log: newLog)
+    if LogDBManager.shared.validateAppInfo(app: newLog.app) {
+        LogDBManager.shared.insert(log: newLog)
         response.status = .created
         response.completed()
     }else {

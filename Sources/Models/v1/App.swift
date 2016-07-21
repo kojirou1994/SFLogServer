@@ -29,7 +29,6 @@ public struct App: SFModel {
     var version: String
 
     public init(json: JSON) throws {
-        print(json["create_time"].date)
         guard let id = json["_id"].oid, key = json["app_key"].string,
             version = json["version"].string, name = json["name"].string,
             disabled = json["disabled"].bool, deleted = json["deleted"].bool,

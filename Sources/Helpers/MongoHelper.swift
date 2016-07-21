@@ -10,15 +10,15 @@ import Foundation
 import MongoDB
 import SFMongo
 
-extension MongoHelper{
-    
-    public func insert(bson: BSONStringConvertible)throws {
-        guard let collectiont = dbCollection() else {
-            throw MongoError.collectionError
-        }
-        _ = collectiont.insert(document: try BSON(json:bson.bsonString))
-        defer {
-            collectiont.close()
-        }
-    }
-}
+//extension MongoHelper{
+//    
+//    public func insert(bson: BSONStringConvertible)throws {
+//        guard let collectiont = dbCollection() else {
+//            throw MongoError.collectionError
+//        }
+//        _ = collectiont.insert(document: try BSON(json:bson.bsonString))
+//        defer {
+//            collectiont.close()
+//        }
+//    }
+//}

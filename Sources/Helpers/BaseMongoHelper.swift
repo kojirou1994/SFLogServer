@@ -8,6 +8,8 @@
 
 import Foundation
 import MongoDB
+import SFMongo
+import Models
 
 public enum MongoError: ErrorProtocol {
     case clientError
@@ -15,38 +17,53 @@ public enum MongoError: ErrorProtocol {
     case collectionError    
 }
 
-private let clientUri = "mongodb://localhost"
+private let localMongo = "mongodb://localhost"
 
-private let dbName = "Log"
+private let LogDatabaseName = "Log"
 
-private let collectionName = "col"
-
-public class MongoHelper {
+public class LogDBManager {
     
     let client: MongoClient
     
-    var db: MongoDatabase
+    var appCol: MongoCollection
     
-    public static let instanceHelper = { return MongoHelper()}()
+    var logCol: MongoCollection
     
-    init() {
-        client = try! MongoClient(uri: clientUri)
-        db = client.getDatabase(name: dbName)
-    }
+    public static let shared = LogDBManager()
     
-    //建立链接
-    public func dbCollection() -> MongoCollection? {
-        return db.getCollection(name: collectionName)
-    }
-    
-    //关闭数据库
-    deinit {
-        db.close()
-        client.close()
+    public init(mongoUri: String = localMongo) {
+        client = try! MongoClient(uri: mongoUri)
+        appCol = client.getCollection(databaseName: LogDatabaseName, collectionName: "app")
+        logCol = client.getCollection(databaseName: LogDatabaseName, collectionName: "log")
     }
     
 }
 
+extension LogDBManager {
+    public func validateAppInfo(app: App) -> Bool {
+        if let apps = ((appCol.find(query: try! BSON(json: "{}"))?.map{return JSON.parse($0.asString)})?.map{return try! App(json: $0)}) {
+            if apps.filter({app.app_key == $0.app_key}).count != 0 {
+                return true
+            }
+        }
+        return false
+    }
+    
+    public func insert(log: Log) {
+//        print(log.bsonString)
+        let _ = logCol.insert(document: try! BSON(json: log.bsonString))
+    }
+    
+    public func findLog(logId: String? = nil) -> [Log]? {
+        do {
+            let logs = try (logCol.find(query: try! BSON(json: "{}"))?.map{return JSON.parse($0.asString)})?.map{return try Log(json: $0)}
+            return logs
+        }catch {
+            return nil
+        }
+        
+    }
+}
 
 private protocol MongoProtocol{
     
