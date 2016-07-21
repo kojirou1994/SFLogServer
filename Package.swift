@@ -3,7 +3,7 @@ import PackageDescription
 let package = Package(
     name: "SFLogServer",
     targets: [
-        Target(name: "MainServer", dependencies: [.Target(name: "Helpers")]),
+        Target(name: "MainServer", dependencies: [.Target(name: "Helpers"), .Target(name: "Models")]),
         Target(
             name: "Helpers",
             dependencies: [.Target(name: "Models")]),
