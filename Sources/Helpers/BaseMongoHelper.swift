@@ -9,9 +9,9 @@
 import Foundation
 import MongoDB
 
-public enum MongoError:ErrorProtocol{
-    case clinetError
-    case datebaseError
+public enum MongoError: ErrorProtocol {
+    case clientError
+    case databaseError
     case collectionError    
 }
 
@@ -27,6 +27,8 @@ public class MongoHelper {
     
     var db: MongoDatabase
     
+    public static let instanceHelper = { return MongoHelper()}()
+    
     init() {
         client = try! MongoClient(uri: clientUri)
         db = client.getDatabase(name: dbName)
@@ -34,20 +36,14 @@ public class MongoHelper {
     
     //建立链接
     public func dbCollection() -> MongoCollection? {
-        guard let collection = db.getCollection(name: collectionName) else {
-            return nil
-        }
-        
-        return collection
+        return db.getCollection(name: collectionName)
     }
     
     //关闭数据库
-    public func closeDb() {
+    deinit {
         db.close()
         client.close()
     }
-
-    public static let instanceHelper = { return MongoHelper()}()
 
 }
 
