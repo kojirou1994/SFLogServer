@@ -33,7 +33,6 @@ routes.add(method:.post,uri: "/submit"){ (request,response) in
         response.completed()
         return
     }
-    
 }
 
 routes.add(method: .get, uri: "/log") { (request, response) in

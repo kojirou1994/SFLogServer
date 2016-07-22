@@ -33,10 +33,8 @@ public struct App: SFModel {
             version = json["version"].string, name = json["name"].string,
             disabled = json["disabled"].bool, deleted = json["deleted"].bool,
             create_time = json["create_time"].date else {
-            print("not an app")
             throw SFMongoError.invalidData
         }
-        
         self._id = id
         self.app_key = key
         self.name = name
