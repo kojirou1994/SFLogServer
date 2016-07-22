@@ -44,22 +44,21 @@ public struct LogQuery {
                 self.level = s
             }
         }
-        
     }
     
     public var query: BSON {
         let query = BSON()
 
         if startTime != nil {
-            query.append(key: "create_time", document: try! BSON(json: "{\"$gt\": {\"$date\": \(startTime!)} }"))
+            _ = query.append(key: "create_time", document: try! BSON(json: "{\"$gt\": {\"$date\": \(startTime!)} }"))
         }
         if endTime != nil {
-            query.append(key: "create_time", document: try! BSON(json: "{\"$lt\": {\"$date\": \(endTime!)} }"))
+            _ = query.append(key: "create_time", document: try! BSON(json: "{\"$lt\": {\"$date\": \(endTime!)} }"))
         }
         if source != nil {
-            query.append(key: "source", int: source!)
+            _ = query.append(key: "source", int: source!)
         }
-        query.append(key: "level", document: try! BSON(json: "{\"$lte\": \(level)}"))
+        _ = query.append(key: "level", document: try! BSON(json: "{\"$lte\": \(level)}"))
         return query
     }
     
