@@ -36,6 +36,14 @@ routes.add(method:.post,uri: "/submit"){ (request,response) in
 }
 
 routes.add(method: .get, uri: "/log") { (request, response) in
+    if let l = request.param(name: "limit") {
+        if let limit = Int(l) {
+            response.setHeader(HTTPResponseHeader.Name.contentType, value: "application/json")
+            response.setBody(string: LogDBManager.shared.findLog(limit: limit)?.jsonString ?? "")
+            response.completed()
+            return
+        }
+    }
     response.setHeader(HTTPResponseHeader.Name.contentType, value: "application/json")
     response.setBody(string: LogDBManager.shared.findLog()?.jsonString ?? "")
     response.completed()
@@ -44,11 +52,13 @@ routes.add(method: .get, uri: "/log") { (request, response) in
 routes.add(method: .get, uri: "/log/{id}") { (request, response) in
     if let logId = request.urlVariables["id"] {
         print("Log ID: \(logId)")
+        response.setHeader(HTTPResponseHeader.Name.contentType, value: "application/json")
+        response.setBody(string: LogDBManager.shared.findLog(logId: logId)?.jsonString ?? "")
     }else {
         print("No Log ID")
+        response.status = .notFound
     }
-    response.setHeader(HTTPResponseHeader.Name.contentType, value: "application/json")
-    response.setBody(string: "{\"data\": 123}")
+    
     response.completed()
 }
 

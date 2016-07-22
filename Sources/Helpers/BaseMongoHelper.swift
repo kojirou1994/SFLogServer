@@ -54,9 +54,22 @@ extension LogDBManager {
         let _ = logCol.insert(document: try! BSON(json: log.bsonString))
     }
     
-    public func findLog(logId: String? = nil) -> [Log]? {
+    /**
+     *  find Log in database
+     *
+     *  - parameter limit:    Optional. return no more than the supplied number of logs. default: 20.
+     *  - parameter logId:    Optional. return the log(s) of specific logid(s). default: nil.
+     *
+     *  - returns:
+     */
+    public func findLog(limit: Int = 20, logId: String? = nil) -> [Log]? {
+        let query = try! BSON(json: "{}")
+        if logId != nil {
+            print("oid ok")
+            query.append(key: "_id", oid: ObjectId.parse(oid: logId!))
+        }
         do {
-            let logs = try (logCol.find(query: try! BSON(json: "{}"))?.map{return JSON.parse($0.asString)})?.map{return try Log(json: $0)}
+            let logs = try (logCol.find(query: query, limit: limit)?.map{return JSON.parse($0.asString)})?.map{return try Log(json: $0)}
             return logs
         }catch {
             return nil
