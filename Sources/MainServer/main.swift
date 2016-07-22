@@ -36,10 +36,12 @@ routes.add(method:.post,uri: "/submit"){ (request,response) in
 }
 
 routes.add(method: .get, uri: "/log") { (request, response) in
+    
     if let l = request.param(name: "limit") {
+        
         if let limit = Int(l) {
             response.setHeader(HTTPResponseHeader.Name.contentType, value: "application/json")
-            response.setBody(string: LogDBManager.shared.findLog(limit: limit)?.jsonString ?? "")
+            response.setBody(string: LogDBManager.shared.findLog(limit: limit, startTime: 0, endTime: 1483027200000)?.jsonString ?? "")
             response.completed()
             return
         }

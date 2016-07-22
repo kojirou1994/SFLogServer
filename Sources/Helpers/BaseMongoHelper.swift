@@ -57,24 +57,42 @@ extension LogDBManager {
     /**
      *  find Log in database
      *
-     *  - parameter limit:    Optional. return no more than the supplied number of logs. default: 20.
-     *  - parameter logId:    Optional. return the log(s) of specific logid(s). default: nil.
+     *  - parameter limit:    Optional. return no more than the supplied number of logs. default is 20.
+     *  - parameter logId:    Optional. return the log(s) of specific logid(s). default is nil.
+     *  - parameter startTime:    Optional. 微秒
      *
      *  - returns:
      */
-    public func findLog(limit: Int = 20, logId: String? = nil) -> [Log]? {
+    public func findLog(limit: Int = 20, startTime: Int? = nil, endTime: Int? = nil, source: Int? = nil, level: Int = 0) -> [Log]? {
         let query = try! BSON(json: "{}")
         if logId != nil {
-            print("oid ok")
             query.append(key: "_id", oid: ObjectId.parse(oid: logId!))
         }
+        if startTime != nil {
+            query.append(key: "create_time", document: try! BSON(json: "{\"$gt\": {\"$date\": \(startTime!)} }"))
+            //\"2016-12-29T16:00:00Z\"
+        }
+        if endTime != nil {
+            query.append(key: "create_time", document: try! BSON(json: "{\"$lt\": {\"$date\": \(endTime!)} }"))
+        }
+        print(query.asString)
         do {
             let logs = try (logCol.find(query: query, limit: limit)?.map{return JSON.parse($0.asString)})?.map{return try Log(json: $0)}
             return logs
         }catch {
             return nil
         }
-        
+    }
+    
+    public func findLog(byLogId: String) -> Log? {
+        let query = BSON()
+        query.append(key: "_id", oid: ObjectId.parse(oid: logId))
+        do {
+            let logs = try (logCol.find(query: query)?.map{return JSON.parse($0.asString)})?.map{return try Log(json: $0)}
+            return logs
+        }catch {
+            return nil
+        }
     }
 }
 
