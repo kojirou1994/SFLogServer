@@ -43,7 +43,7 @@ public class LogDBManager {
 extension LogDBManager {
     public func validateAppInfo(app: App) -> Bool {
         if let apps = ((appCol.find(query: try! BSON(json: "{}"))?.map{return JSON.parse($0.asString)})?.map{return try! App(json: $0)}) {
-            if apps.filter({app.app_key == $0.app_key}).count != 0 {
+            if apps.filter({app.app_key == $0.app_key && app._id == $0._id}).count != 0 {
                 return true
             }
         }
@@ -76,7 +76,7 @@ extension LogDBManager {
     
     public func findLog(byLogId: String) -> Log? {
         let query = BSON()
-        query.append(key: "_id", oid: ObjectId.parse(oid: byLogId))
+        _ = query.append(key: "_id", oid: ObjectId.parse(oid: byLogId))
         do {
             let logs = try (logCol.find(query: query)?.map{return JSON.parse($0.asString)})?.map{return try Log(json: $0)}
             return logs?.first
