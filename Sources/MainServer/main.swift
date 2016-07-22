@@ -36,18 +36,8 @@ routes.add(method:.post,uri: "/submit"){ (request,response) in
 }
 
 routes.add(method: .get, uri: "/log") { (request, response) in
-    
-    if let l = request.param(name: "limit") {
-        
-        if let limit = Int(l) {
-            response.setHeader(HTTPResponseHeader.Name.contentType, value: "application/json")
-            response.setBody(string: LogDBManager.shared.findLog(limit: limit, startTime: 0, endTime: 1483027200000)?.jsonString ?? "")
-            response.completed()
-            return
-        }
-    }
     response.setHeader(HTTPResponseHeader.Name.contentType, value: "application/json")
-    response.setBody(string: LogDBManager.shared.findLog()?.jsonString ?? "")
+    response.setBody(string: LogDBManager.shared.findLog(request: request)?.jsonString ?? "")
     response.completed()
 }
 
@@ -55,7 +45,7 @@ routes.add(method: .get, uri: "/log/{id}") { (request, response) in
     if let logId = request.urlVariables["id"] {
         print("Log ID: \(logId)")
         response.setHeader(HTTPResponseHeader.Name.contentType, value: "application/json")
-        response.setBody(string: LogDBManager.shared.findLog(logId: logId)?.jsonString ?? "")
+        response.setBody(string: LogDBManager.shared.findLog(byLogId: logId)?.jsonString ?? "")
     }else {
         print("No Log ID")
         response.status = .notFound

@@ -11,14 +11,14 @@ import SFMongo
 import MongoDB
 import PerfectHTTP
 
-struct LogQuery {
-    var limit = 20
+public struct LogQuery {
+    public private(set) var limit = 20
     var startTime: Int?
     var endTime: Int?
     var source: Int?
     var level = 0
     
-    init(request: HTTPRequest) {
+    public init(_ request: HTTPRequest) {
         if let l = request.param(name: "limit") {
             if let limit = Int(l) {
                 self.limit = limit
@@ -47,7 +47,7 @@ struct LogQuery {
         
     }
     
-    var query: BSON {
+    public var query: BSON {
         let query = BSON()
 
         if startTime != nil {
