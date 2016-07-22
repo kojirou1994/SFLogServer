@@ -60,7 +60,7 @@ extension App {
         self.app_key = key
         self.name = name
         self.description_url = requestJSON["description_url"].string
-        self.create_time = Date(timeIntervalSince1970: Double(create_time))
+        self.create_time = Date(timeIntervalSince1970: Double(create_time) / 1000)
         self.update_time = requestJSON["update_time"].date
         self.disabled = disabled
         self.deleted = deleted

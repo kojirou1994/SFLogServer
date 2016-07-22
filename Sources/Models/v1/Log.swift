@@ -68,7 +68,7 @@ public struct Log: SFModel {
     var deleted:Bool
     
     public init(json: JSON) throws {
-        guard let id = json["_id"].oid, app = App(requestJSON: json["app"]), source = LogSource(rawValue: json["source"].intValue), source_ip = json["source_ip"].string, level = LogLevel(rawValue: json["level"].intValue), content = json["content"].string, create_time = json["create_time"].date, deleted = json["deleted"].bool else {
+        guard let id = json["_id"].oid, app = try? App(json: json["app"]), source = LogSource(rawValue: json["source"].intValue), source_ip = json["source_ip"].string, level = LogLevel(rawValue: json["level"].intValue), content = json["content"].string, create_time = json["create_time"].date, deleted = json["deleted"].bool else {
             throw SFMongoError.invalidData
         }
         self._id = id
