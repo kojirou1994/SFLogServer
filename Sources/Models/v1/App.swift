@@ -46,3 +46,24 @@ public struct App: SFModel {
         self.version = version
     }
 }
+
+extension App {
+    public init?(requestJSON: JSON) {
+        guard let id = ObjectId(oid: requestJSON["_id"].stringValue), key = requestJSON["app_key"].string,
+            version = requestJSON["version"].string, name = requestJSON["name"].string,
+            disabled = requestJSON["disabled"].bool, deleted = requestJSON["deleted"].bool,
+            create_time = requestJSON["create_time"].int else {
+                print("not an app")
+                return nil
+        }
+        self._id = id
+        self.app_key = key
+        self.name = name
+        self.description_url = requestJSON["description_url"].string
+        self.create_time = Date(timeIntervalSince1970: Double(create_time))
+        self.update_time = requestJSON["update_time"].date
+        self.disabled = disabled
+        self.deleted = deleted
+        self.version = version
+    }
+}
