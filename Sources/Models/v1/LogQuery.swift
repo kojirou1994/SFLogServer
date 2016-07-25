@@ -17,6 +17,7 @@ public struct LogQuery {
     var endTime: Int?
     var source: Int?
     var level = 0
+    var deleted: Bool?
     
     public init(_ request: HTTPRequest) {
         if let l = request.param(name: "limit") {
@@ -44,22 +45,28 @@ public struct LogQuery {
                 self.level = s
             }
         }
+        if let t = request.param(name: "deleted") {
+            self.deleted = t == "true"
+        }
     }
     
     public var query: BSON {
-        let query = BSON()
+        let q = BSON()
 
         if startTime != nil {
-            _ = query.append(key: "create_time", document: try! BSON(json: "{\"$gt\": {\"$date\": \(startTime!)} }"))
+            _ = q.append(key: "create_time", document: try! BSON(json: "{\"$gt\": {\"$date\": \(startTime!)} }"))
         }
         if endTime != nil {
-            _ = query.append(key: "create_time", document: try! BSON(json: "{\"$lt\": {\"$date\": \(endTime!)} }"))
+            _ = q.append(key: "create_time", document: try! BSON(json: "{\"$lt\": {\"$date\": \(endTime!)} }"))
         }
         if source != nil {
-            _ = query.append(key: "source", int: source!)
+            _ = q.append(key: "source", int: source!)
         }
-        _ = query.append(key: "level", document: try! BSON(json: "{\"$lte\": \(level)}"))
-        return query
+        if deleted != nil {
+            _ = q.append(key: "deleted", bool: deleted!)
+        }
+        _ = q.append(key: "level", document: try! BSON(json: "{\"$lte\": \(level)}"))
+        return q
     }
     
 }
