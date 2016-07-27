@@ -29,10 +29,10 @@ public struct App: SFModel {
     var version: String
 
     public init(json: JSON) throws {
-        guard let id = json["_id"].oid, key = json["app_key"].string,
-            version = json["version"].string, name = json["name"].string,
-            disabled = json["disabled"].bool, deleted = json["deleted"].bool,
-            create_time = json["create_time"].date else {
+        guard let id = json["_id"].oid, let key = json["app_key"].string,
+            let version = json["version"].string, let name = json["name"].string,
+            let disabled = json["disabled"].bool, let deleted = json["deleted"].bool,
+            let create_time = json["create_time"].date else {
             throw SFMongoError.invalidData
         }
         self._id = id
@@ -49,10 +49,10 @@ public struct App: SFModel {
 
 extension App {
     public init?(requestJSON: JSON) {
-        guard let id = ObjectId(oid: requestJSON["_id"].stringValue), key = requestJSON["app_key"].string,
-            version = requestJSON["version"].string, name = requestJSON["name"].string,
-            disabled = requestJSON["disabled"].bool, deleted = requestJSON["deleted"].bool,
-            create_time = requestJSON["create_time"].int else {
+        guard let id = ObjectId(oid: requestJSON["_id"].stringValue), let key = requestJSON["app_key"].string,
+            let version = requestJSON["version"].string, let name = requestJSON["name"].string,
+            let disabled = requestJSON["disabled"].bool, let deleted = requestJSON["deleted"].bool,
+            let create_time = requestJSON["create_time"].int else {
                 print("not an app")
                 return nil
         }

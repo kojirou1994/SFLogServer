@@ -12,7 +12,7 @@ import SFMongo
 import Models
 import PerfectHTTP
 
-public enum MongoError: ErrorProtocol {
+public enum MongoError: Error {
     case clientError
     case databaseError
     case collectionError    
@@ -62,7 +62,7 @@ extension LogDBManager {
      *  - parameter logId:    Optional. return the log(s) of specific logid(s). default is nil.
      *  - parameter startTime:    Optional. 微秒
      *
-     *  - returns:
+     *  - returns: Array of logs
      */
     public func findLog(request: HTTPRequest) -> [Log]? {
         let sql = LogQuery(request)

@@ -11,10 +11,9 @@ let server = HTTPServer()
 var routes = Routes()
 
 routes.add(method: .get, uri: "/") { (request, response) in
-    response.appendBody(string: "Hello World!")
+    response.appendBody(string: "Not Available")
     response.completed()
 }
-
 
 routes.add(method: .get, uri: "/log") { (request, response) in
     response.setHeader(HTTPResponseHeader.Name.contentType, value: "application/json")

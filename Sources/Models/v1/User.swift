@@ -38,7 +38,7 @@ public struct UserInfo: SFModel {
     var createTime: Date
     
     public init(json: JSON) throws {
-        guard let id = json["_id"].oid, state = UserState(rawValue: json["state"].intValue), username = json["username"].string, realname = json["realname"].string, password =  json["password"].string, phone = json["phone"].string, position =  UserPosition(rawValue: json["position"].intValue), createTime = json["createTime"].date else {
+        guard let id = json["_id"].oid, let state = UserState(rawValue: json["state"].intValue), let username = json["username"].string, let realname = json["realname"].string, let password =  json["password"].string, let phone = json["phone"].string, let position =  UserPosition(rawValue: json["position"].intValue), let createTime = json["createTime"].date else {
             throw SFMongoError.invalidData
         }
         self._id = id

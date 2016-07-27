@@ -68,7 +68,7 @@ public struct Log: SFModel {
     var deleted:Bool
     
     public init(json: JSON) throws {
-        guard let id = json["_id"].oid, app = try? App(json: json["app"]), source = LogSource(rawValue: json["source"].intValue), source_ip = json["source_ip"].string, level = LogLevel(rawValue: json["level"].intValue), content = json["content"].string, create_time = json["create_time"].date, deleted = json["deleted"].bool else {
+        guard let id = json["_id"].oid, let app = try? App(json: json["app"]), let source = LogSource(rawValue: json["source"].intValue), let source_ip = json["source_ip"].string, let level = LogLevel(rawValue: json["level"].intValue), let content = json["content"].string, let create_time = json["create_time"].date, let deleted = json["deleted"].bool else {
             throw SFMongoError.invalidData
         }
         self._id = id
@@ -86,7 +86,7 @@ public struct Log: SFModel {
     
     public init?(request: HTTPRequest) {
         let json = JSON.parse(request.postBodyString ?? "")
-        guard let app = App(requestJSON: json["app"]), source = LogSource(rawValue: json["source"].intValue), level = LogLevel(rawValue: json["level"].intValue), content = json["content"].string else {
+        guard let app = App(requestJSON: json["app"]), let source = LogSource(rawValue: json["source"].intValue), let level = LogLevel(rawValue: json["level"].intValue), let content = json["content"].string else {
             return nil
         }
         self._id = ObjectId.generate()
@@ -113,7 +113,7 @@ public struct LogDescription: SFModel {
     var createTime: Date
     
     public init(json: JSON) throws {
-        guard let userId = json["userId"].string, description = json["description"].string, createTime = json["createTime"].date else { throw SFMongoError.invalidData }
+        guard let userId = json["userId"].string, let description = json["description"].string, let createTime = json["createTime"].date else { throw SFMongoError.invalidData }
         self.userId = userId
         self.description = description
         self.createTime = createTime
