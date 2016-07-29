@@ -17,7 +17,7 @@ routes.add(method: .get, uri: "/") { (request, response) in
 
 routes.add(method: .get, uri: "/log") { (request, response) in
     response.setHeader(HTTPResponseHeader.Name.contentType, value: "application/json")
-    response.setBody(string: LogDBManager.shared.findLog(request: request)?.jsonString ?? "")
+    response.setBody(string: LogDBManager.shared.findLogs(request: request)?.jsonString ?? "")
     response.completed()
 }
 

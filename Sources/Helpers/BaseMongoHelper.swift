@@ -58,13 +58,11 @@ extension LogDBManager {
     /**
      *  find Log in database
      *
-     *  - parameter limit:    Optional. return no more than the supplied number of logs. default is 20.
-     *  - parameter logId:    Optional. return the log(s) of specific logid(s). default is nil.
-     *  - parameter startTime:    Optional. 微秒
+     *  - parameter request:    网络请求
      *
      *  - returns: Array of logs
      */
-    public func findLog(request: HTTPRequest) -> [Log]? {
+    public func findLogs(request: HTTPRequest) -> [Log]? {
         let sql = LogQuery(request)
         do {
             let logs = try (logCol.find(query: sql.query, limit: sql.limit)?.map{return JSON.parse($0.asString)})?.map{return try Log(json: $0)}
